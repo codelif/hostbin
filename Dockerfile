@@ -2,13 +2,14 @@
 
 FROM golang:1.26.1-bookworm AS build
 
-WORKDIR /src/server
+WORKDIR /src
 
-COPY server/go.mod server/go.sum ./
+COPY go.mod go.sum ./
 RUN --mount=type=cache,target=/go/pkg/mod \
 	go mod download
 
-COPY server/ ./
+COPY cmd/ ./cmd/
+COPY internal/ ./internal/
 RUN --mount=type=cache,target=/go/pkg/mod \
 	--mount=type=cache,target=/root/.cache/go-build \
 	CGO_ENABLED=0 go build -trimpath -ldflags='-s -w' -o /out/hostbin ./cmd/server

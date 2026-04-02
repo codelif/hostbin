@@ -1,18 +1,23 @@
 # Architecture
 
-The repository root contains documentation and deployment notes. The runnable server module lives in `server/`.
+The repository root contains the Go module, deployment notes, and both reusable and server-only packages.
 
 Core runtime pieces:
 
 - `cmd/server`: process entrypoint and graceful shutdown.
-- `internal/app`: wiring for config, logging, storage, auth, Gin engines, and top-level HTTP wrappers.
-- `internal/router`: strict host normalization and dispatch between admin and public handlers.
-- `internal/public`: read-only plaintext document serving with ETag support.
-- `internal/admin`: authenticated JSON admin API for CRUD operations.
-- `internal/auth`: HMAC request verification and canonical request handling.
-- `internal/storage/sqlite`: SQLite schema initialization and document persistence.
-- `internal/nonce`: atomic in-memory nonce replay protection.
-- `internal/logging`: Zap logger and access logging.
+- `internal/domain/documents`: document types, repository interface, and domain errors.
+- `internal/domain/hosts`: host normalization, host classification, and public URL building.
+- `internal/domain/slugs`: shared slug validation rules.
+- `internal/protocol/adminv1`: stable admin API DTOs, routes, and error codes.
+- `internal/protocol/authsig`: canonical request signing primitives shared across transports.
+- `internal/server/app`: composition root for storage, middleware, handlers, and server lifecycle.
+- `internal/server/adminhttp`: admin Gin handlers and route registration.
+- `internal/server/adminauth`: HMAC request verification middleware.
+- `internal/server/publichttp`: public plaintext document handlers.
+- `internal/server/dispatch`: strict host-based dispatch between public and admin HTTP stacks.
+- `internal/server/store/sqlite`: SQLite schema initialization and document persistence.
+- `internal/server/nonce`: atomic in-memory nonce replay protection.
+- `internal/server/logging`: Zap logger creation and access logging middleware.
 
 Phase-by-phase implementation order:
 

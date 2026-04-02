@@ -1,5 +1,4 @@
 APP := hostbin
-SERVER_DIR := server
 BIN_DIR := bin
 BUILD_BINARY := $(BIN_DIR)/$(APP)
 GO ?= go
@@ -42,23 +41,23 @@ help:
 		"  DESTDIR=/tmp/pkg     Package staging root"
 
 fmt:
-	$(GO) -C $(SERVER_DIR) fmt ./...
+	$(GO) fmt ./...
 
 tidy:
-	$(GO) -C $(SERVER_DIR) mod tidy
+	$(GO) mod tidy
 
 test:
-	$(GO) -C $(SERVER_DIR) test ./...
+	$(GO) test ./...
 
 test-race:
-	$(GO) -C $(SERVER_DIR) test -race ./...
+	$(GO) test -race ./...
 
 build:
 	mkdir -p $(BIN_DIR)
-	$(GO) -C $(SERVER_DIR) build -o ../$(BUILD_BINARY) ./cmd/server
+	$(GO) build -o $(BUILD_BINARY) ./cmd/server
 
 run:
-	$(GO) -C $(SERVER_DIR) run ./cmd/server
+	$(GO) run ./cmd/server
 
 install: build
 	install -d "$(DESTDIR)$(BINDIR)"

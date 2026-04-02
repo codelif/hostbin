@@ -4,5 +4,5 @@ bin/
 data/
 deploy/
 docs/
-server/integration/
-server/**/*_test.go
+integration/
+**/*_test.go
