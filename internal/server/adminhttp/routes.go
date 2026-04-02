@@ -23,6 +23,7 @@ func NewEngine(handler *Handler, maxDocSize int64, authMiddleware gin.HandlerFun
 
 	authenticated := engine.Group(adminv1.BasePath)
 	authenticated.Use(middleware.LimitBodyBytes(maxDocSize), authMiddleware)
+	authenticated.GET(adminv1.AuthCheckRelativePath, handler.AuthCheck)
 	authenticated.GET(adminv1.DocumentsRelativePath, handler.ListDocuments)
 	authenticated.GET(adminv1.DocumentPathPattern, handler.GetDocument)
 	authenticated.GET(adminv1.DocumentContentPattern, handler.GetDocumentContent)

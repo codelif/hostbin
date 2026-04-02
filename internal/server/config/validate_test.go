@@ -38,7 +38,7 @@ func TestValidate(t *testing.T) {
 			mutate: func(cfg *Config) {
 				cfg.PresharedKey = "short"
 			},
-			wantErr: "PRESHARED_KEY must be at least 32 bytes",
+			wantErr: "PRESHARED_KEY shared secret must be at least 32 bytes",
 		},
 		{
 			name: "empty db path",

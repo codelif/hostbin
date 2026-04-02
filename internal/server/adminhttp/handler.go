@@ -33,6 +33,10 @@ func (h *Handler) Health(c *gin.Context) {
 	c.JSON(http.StatusOK, adminv1.HealthResponse{Status: "ok"})
 }
 
+func (h *Handler) AuthCheck(c *gin.Context) {
+	c.JSON(http.StatusOK, adminv1.StatusResponse{Status: "ok"})
+}
+
 func (h *Handler) ListDocuments(c *gin.Context) {
 	docs, err := h.service.ListDocuments(c.Request.Context())
 	if err != nil {

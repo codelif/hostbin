@@ -113,6 +113,21 @@ func TestPublicAndAdminFlows(t *testing.T) {
 		t.Fatalf("content body = %q, want %q", contentResp.Body.String(), "hello world updated")
 	}
 
+	healthReq := httptest.NewRequest(http.MethodGet, "http://admin.domain.com/api/v1/health", nil)
+	healthReq.Host = "admin.domain.com"
+	healthResp := httptest.NewRecorder()
+	handler.ServeHTTP(healthResp, healthReq)
+	if healthResp.Code != http.StatusOK || strings.TrimSpace(healthResp.Body.String()) != `{"status":"ok"}` {
+		t.Fatalf("health response = (%d, %q)", healthResp.Code, healthResp.Body.String())
+	}
+
+	authCheckReq := signedAdminRequest(t, http.MethodGet, "/api/v1/auth/check", nil, fixedTime, "adad1111bbbb2222cccc3333dddd4444")
+	authCheckResp := httptest.NewRecorder()
+	handler.ServeHTTP(authCheckResp, authCheckReq)
+	if authCheckResp.Code != http.StatusOK || strings.TrimSpace(authCheckResp.Body.String()) != `{"status":"ok"}` {
+		t.Fatalf("auth check response = (%d, %q)", authCheckResp.Code, authCheckResp.Body.String())
+	}
+
 	missingReplaceReq := signedAdminRequest(t, http.MethodPut, "/api/v1/documents/missing", []byte("nope"), fixedTime, "acac1111bbbb2222cccc3333dddd4444")
 	missingReplaceResp := httptest.NewRecorder()
 	handler.ServeHTTP(missingReplaceResp, missingReplaceReq)

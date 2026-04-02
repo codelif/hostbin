@@ -1,8 +1,10 @@
 package adminv1
 
-type HealthResponse struct {
+type StatusResponse struct {
 	Status string `json:"status"`
 }
+
+type HealthResponse = StatusResponse
 
 type ErrorResponse struct {
 	Error string `json:"error"`

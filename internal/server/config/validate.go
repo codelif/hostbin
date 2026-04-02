@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"hostbin/internal/domain/slugs"
+	"hostbin/internal/protocol/authsig"
 )
 
 func Validate(cfg Config) error {
@@ -25,8 +26,8 @@ func Validate(cfg Config) error {
 		return fmt.Errorf("ADMIN_HOST must be under BASE_DOMAIN")
 	}
 
-	if len(cfg.PresharedKey) < 32 {
-		return fmt.Errorf("PRESHARED_KEY must be at least 32 bytes")
+	if err := authsig.ValidateSharedSecret(cfg.PresharedKey); err != nil {
+		return fmt.Errorf("PRESHARED_KEY %w", err)
 	}
 
 	if strings.TrimSpace(cfg.DBPath) == "" {

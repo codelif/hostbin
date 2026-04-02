@@ -10,6 +10,7 @@ Public document hosts:
 Admin host routes under `/api/v1`:
 
 - `GET /health`
+- `GET /auth/check`
 - `GET /documents`
 - `GET /documents/:slug`
 - `GET /documents/:slug/content`
@@ -22,6 +23,10 @@ Authenticated admin requests require:
 - `X-Timestamp`
 - `X-Nonce`
 - `X-Signature`
+
+`GET /health` is public.
+
+`GET /auth/check` is authenticated and returns `{"status":"ok"}` when signing succeeds.
 
 Upload rules:
 
