@@ -51,7 +51,7 @@ func Load() (Config, error) {
 		ListenAddr:         envOrDefault("LISTEN_ADDR", "127.0.0.1:8080"),
 		BaseDomain:         strings.ToLower(strings.TrimSpace(os.Getenv("BASE_DOMAIN"))),
 		AdminHost:          strings.ToLower(strings.TrimSpace(os.Getenv("ADMIN_HOST"))),
-		PresharedKey:       os.Getenv("PRESHARED_KEY"),
+		PresharedKey:       strings.TrimSpace(os.Getenv("PRESHARED_KEY")),
 		DBPath:             strings.TrimSpace(os.Getenv("DB_PATH")),
 		ReservedSubdomains: splitCSV(envOrDefault("RESERVED_SUBDOMAINS", "admin,www,api")),
 		MaxDocSize:         maxDocSize,
