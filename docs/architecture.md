@@ -5,11 +5,13 @@ The repository root contains the Go module, deployment notes, and both reusable 
 Core runtime pieces:
 
 - `cmd/server`: process entrypoint and graceful shutdown.
+- `cmd/hbcli`: CLI entrypoint for local configuration and future document commands.
 - `internal/domain/documents`: document types, repository interface, and domain errors.
 - `internal/domain/hosts`: host normalization, host classification, and public URL building.
 - `internal/domain/slugs`: shared slug validation rules.
 - `internal/protocol/adminv1`: stable admin API DTOs, routes, and error codes.
 - `internal/protocol/authsig`: canonical request signing primitives shared across transports.
+- `internal/cli`: config storage, prompts, HTTP client helpers, and Cobra commands.
 - `internal/server/app`: composition root for storage, middleware, handlers, and server lifecycle.
 - `internal/server/adminhttp`: admin Gin handlers and route registration.
 - `internal/server/adminauth`: HMAC request verification middleware.

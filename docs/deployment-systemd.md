@@ -19,6 +19,7 @@ Setup outline:
 Notes on `make install-all`:
 
 - installs the binary to `/usr/local/bin/hostbin`
+- installs the CLI to `/usr/local/bin/hbcli`
 - installs the unit to `/etc/systemd/system/hostbin.service`
 - installs `/etc/hostbin/hostbin.env` only if it does not already exist
 - creates `/var/lib/hostbin`
