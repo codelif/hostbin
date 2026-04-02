@@ -10,11 +10,18 @@ Recommended install layout:
 Setup outline:
 
 1. create a dedicated service account: `sudo useradd --system --home /var/lib/hostbin --shell /usr/sbin/nologin hostbin`
-2. install the binary to `/usr/local/bin/hostbin`
-3. install `deploy/systemd/hostbin.service` to `/etc/systemd/system/hostbin.service`
-4. copy `deploy/systemd/hostbin.env.example` to `/etc/hostbin/hostbin.env` and fill in the secret
-5. create `/etc/hostbin` and `/var/lib/hostbin` owned by the `hostbin` user
+2. build the binary with `make build`
+3. install files with `sudo make install-all`
+4. edit `/etc/hostbin/hostbin.env` and fill in the secret and domain settings
+5. ensure `/etc/hostbin` and `/var/lib/hostbin` are owned by the `hostbin` user
 6. enable and start the service with `sudo systemctl enable --now hostbin`
+
+Notes on `make install-all`:
+
+- installs the binary to `/usr/local/bin/hostbin`
+- installs the unit to `/etc/systemd/system/hostbin.service`
+- installs `/etc/hostbin/hostbin.env` only if it does not already exist
+- creates `/var/lib/hostbin`
 
 Verification:
 
