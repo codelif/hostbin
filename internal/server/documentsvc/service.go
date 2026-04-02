@@ -28,8 +28,12 @@ func (s *Service) GetDocument(ctx context.Context, slug string) (*documents.Docu
 	return s.store.GetDocument(ctx, slug)
 }
 
-func (s *Service) PutDocument(ctx context.Context, slug string, content []byte) (*documents.Document, error) {
-	return s.store.PutDocument(ctx, slug, content, s.clock.Now())
+func (s *Service) CreateDocument(ctx context.Context, slug string, content []byte) (*documents.Document, error) {
+	return s.store.CreateDocument(ctx, slug, content, s.clock.Now())
+}
+
+func (s *Service) ReplaceDocument(ctx context.Context, slug string, content []byte) (*documents.Document, error) {
+	return s.store.ReplaceDocument(ctx, slug, content, s.clock.Now())
 }
 
 func (s *Service) DeleteDocument(ctx context.Context, slug string) error {

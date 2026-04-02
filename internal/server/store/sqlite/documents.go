@@ -7,6 +7,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"strings"
 	"time"
 
 	"hostbin/internal/domain/documents"
@@ -143,7 +144,26 @@ WHERE slug = ?`
 	return &doc, nil
 }
 
-func (s *DocumentStore) PutDocument(ctx context.Context, slug string, content []byte, now time.Time) (*documents.Document, error) {
+func (s *DocumentStore) CreateDocument(ctx context.Context, slug string, content []byte, now time.Time) (*documents.Document, error) {
+	now = now.UTC().Truncate(time.Second)
+	nowRaw := now.Format(time.RFC3339)
+	hashHex, sizeBytes := contentMetadata(content)
+
+	const query = `
+INSERT INTO documents (slug, content, content_sha256, size_bytes, created_at, updated_at)
+VALUES (?, ?, ?, ?, ?, ?)`
+
+	if _, err := s.db.ExecContext(ctx, query, slug, content, hashHex, sizeBytes, nowRaw, nowRaw); err != nil {
+		if isUniqueConstraint(err) {
+			return nil, documents.ErrAlreadyExists
+		}
+		return nil, err
+	}
+
+	return s.GetDocument(ctx, slug)
+}
+
+func (s *DocumentStore) ReplaceDocument(ctx context.Context, slug string, content []byte, now time.Time) (*documents.Document, error) {
 	tx, err := s.db.BeginTx(ctx, nil)
 	if err != nil {
 		return nil, err
@@ -154,32 +174,34 @@ func (s *DocumentStore) PutDocument(ctx context.Context, slug string, content []
 
 	now = now.UTC().Truncate(time.Second)
 	nowRaw := now.Format(time.RFC3339)
-	hash := sha256.Sum256(content)
-	hashHex := hex.EncodeToString(hash[:])
-	sizeBytes := int64(len(content))
+	hashHex, sizeBytes := contentMetadata(content)
 
 	const existingQuery = `SELECT created_at FROM documents WHERE slug = ?`
-	createdAtRaw := nowRaw
+	var createdAtRaw string
 	err = tx.QueryRowContext(ctx, existingQuery, slug).Scan(&createdAtRaw)
-	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, documents.ErrNotFound
+		}
 		return nil, err
 	}
-	if errors.Is(err, sql.ErrNoRows) {
-		createdAtRaw = nowRaw
+
+	const update = `
+UPDATE documents
+SET content = ?, content_sha256 = ?, size_bytes = ?, updated_at = ?
+WHERE slug = ?`
+
+	result, err := tx.ExecContext(ctx, update, content, hashHex, sizeBytes, nowRaw, slug)
+	if err != nil {
+		return nil, err
 	}
 
-	const upsert = `
-INSERT INTO documents (slug, content, content_sha256, size_bytes, created_at, updated_at)
-VALUES (?, ?, ?, ?, ?, ?)
-ON CONFLICT(slug) DO UPDATE SET
-	content = excluded.content,
-	content_sha256 = excluded.content_sha256,
-	size_bytes = excluded.size_bytes,
-	created_at = documents.created_at,
-	updated_at = excluded.updated_at`
-
-	if _, err := tx.ExecContext(ctx, upsert, slug, content, hashHex, sizeBytes, createdAtRaw, nowRaw); err != nil {
+	affected, err := result.RowsAffected()
+	if err != nil {
 		return nil, err
+	}
+	if affected == 0 {
+		return nil, documents.ErrNotFound
 	}
 
 	if err := tx.Commit(); err != nil {
@@ -215,4 +237,13 @@ func parseTimestamp(raw string) (time.Time, error) {
 	}
 
 	return parsed.UTC(), nil
+}
+
+func contentMetadata(content []byte) (string, int64) {
+	hash := sha256.Sum256(content)
+	return hex.EncodeToString(hash[:]), int64(len(content))
+}
+
+func isUniqueConstraint(err error) bool {
+	return strings.Contains(strings.ToLower(err.Error()), "unique")
 }

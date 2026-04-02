@@ -1,6 +1,7 @@
 package adminhttp
 
 import (
+	"context"
 	"errors"
 	"io"
 	"mime"
@@ -77,7 +78,15 @@ func (h *Handler) GetDocumentContent(c *gin.Context) {
 	c.Data(http.StatusOK, "text/plain; charset=utf-8", doc.Content)
 }
 
-func (h *Handler) PutDocument(c *gin.Context) {
+func (h *Handler) CreateDocument(c *gin.Context) {
+	h.writeDocument(c, h.service.CreateDocument, http.StatusCreated)
+}
+
+func (h *Handler) ReplaceDocument(c *gin.Context) {
+	h.writeDocument(c, h.service.ReplaceDocument, http.StatusOK)
+}
+
+func (h *Handler) writeDocument(c *gin.Context, write func(context.Context, string, []byte) (*documents.Document, error), status int) {
 	slugValue, ok := h.validatedSlug(c)
 	if !ok {
 		return
@@ -104,13 +113,13 @@ func (h *Handler) PutDocument(c *gin.Context) {
 		return
 	}
 
-	doc, err := h.service.PutDocument(c.Request.Context(), slugValue, body)
+	doc, err := write(c.Request.Context(), slugValue, body)
 	if err != nil {
-		writeError(c, http.StatusInternalServerError, adminv1.ErrorInternal)
+		h.handleStoreError(c, err)
 		return
 	}
 
-	c.JSON(http.StatusOK, toDocumentResponse(h.baseDomain, toMeta(*doc)))
+	c.JSON(status, toDocumentResponse(h.baseDomain, toMeta(*doc)))
 }
 
 func (h *Handler) DeleteDocument(c *gin.Context) {
@@ -139,6 +148,10 @@ func (h *Handler) validatedSlug(c *gin.Context) (string, bool) {
 }
 
 func (h *Handler) handleStoreError(c *gin.Context, err error) {
+	if errors.Is(err, documents.ErrAlreadyExists) {
+		writeError(c, http.StatusConflict, adminv1.ErrorAlreadyExists)
+		return
+	}
 	if errors.Is(err, documents.ErrNotFound) {
 		writeError(c, http.StatusNotFound, adminv1.ErrorNotFound)
 		return

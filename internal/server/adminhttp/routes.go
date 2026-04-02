@@ -23,11 +23,12 @@ func NewEngine(handler *Handler, maxDocSize int64, authMiddleware gin.HandlerFun
 
 	authenticated := engine.Group(adminv1.BasePath)
 	authenticated.Use(middleware.LimitBodyBytes(maxDocSize), authMiddleware)
-	authenticated.GET("/documents", handler.ListDocuments)
-	authenticated.GET("/documents/:slug", handler.GetDocument)
-	authenticated.GET("/documents/:slug/content", handler.GetDocumentContent)
-	authenticated.PUT("/documents/:slug", handler.PutDocument)
-	authenticated.DELETE("/documents/:slug", handler.DeleteDocument)
+	authenticated.GET(adminv1.DocumentsRelativePath, handler.ListDocuments)
+	authenticated.GET(adminv1.DocumentPathPattern, handler.GetDocument)
+	authenticated.GET(adminv1.DocumentContentPattern, handler.GetDocumentContent)
+	authenticated.POST(adminv1.DocumentPathPattern, handler.CreateDocument)
+	authenticated.PUT(adminv1.DocumentPathPattern, handler.ReplaceDocument)
+	authenticated.DELETE(adminv1.DocumentPathPattern, handler.DeleteDocument)
 
 	engine.NoRoute(func(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusNotFound, adminv1.ErrorResponse{Error: adminv1.ErrorNotFound})

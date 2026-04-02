@@ -24,11 +24,11 @@ func TestPublicAndAdminFlows(t *testing.T) {
 	handler, cleanup := newTestHandler(t, fixedTime)
 	defer cleanup()
 
-	putReq := signedAdminRequest(t, http.MethodPut, "/api/v1/documents/doc1", []byte("hello world"), fixedTime, "aaaa1111bbbb2222cccc3333dddd4444")
-	putResp := httptest.NewRecorder()
-	handler.ServeHTTP(putResp, putReq)
-	if putResp.Code != http.StatusOK {
-		t.Fatalf("PUT status = %d, want %d, body=%s", putResp.Code, http.StatusOK, putResp.Body.String())
+	createReq := signedAdminRequest(t, http.MethodPost, "/api/v1/documents/doc1", []byte("hello world"), fixedTime, "aaaa1111bbbb2222cccc3333dddd4444")
+	createResp := httptest.NewRecorder()
+	handler.ServeHTTP(createResp, createReq)
+	if createResp.Code != http.StatusCreated {
+		t.Fatalf("POST status = %d, want %d, body=%s", createResp.Code, http.StatusCreated, createResp.Body.String())
 	}
 
 	var putBody struct {
@@ -39,12 +39,26 @@ func TestPublicAndAdminFlows(t *testing.T) {
 		CreatedAt string `json:"created_at"`
 		UpdatedAt string `json:"updated_at"`
 	}
-	decodeJSON(t, putResp.Body.String(), &putBody)
+	decodeJSON(t, createResp.Body.String(), &putBody)
 	if putBody.Slug != "doc1" {
 		t.Fatalf("slug = %q, want doc1", putBody.Slug)
 	}
 	if putBody.URL != "https://doc1.domain.com/" {
 		t.Fatalf("url = %q, want https://doc1.domain.com/", putBody.URL)
+	}
+
+	conflictReq := signedAdminRequest(t, http.MethodPost, "/api/v1/documents/doc1", []byte("duplicate"), fixedTime, "ffff1111bbbb2222cccc3333dddd4444")
+	conflictResp := httptest.NewRecorder()
+	handler.ServeHTTP(conflictResp, conflictReq)
+	if conflictResp.Code != http.StatusConflict || strings.TrimSpace(conflictResp.Body.String()) != `{"error":"already_exists"}` {
+		t.Fatalf("create conflict response = (%d, %q)", conflictResp.Code, conflictResp.Body.String())
+	}
+
+	replaceReq := signedAdminRequest(t, http.MethodPut, "/api/v1/documents/doc1", []byte("hello world updated"), fixedTime, "abab1111bbbb2222cccc3333dddd4444")
+	replaceResp := httptest.NewRecorder()
+	handler.ServeHTTP(replaceResp, replaceReq)
+	if replaceResp.Code != http.StatusOK {
+		t.Fatalf("PUT status = %d, want %d, body=%s", replaceResp.Code, http.StatusOK, replaceResp.Body.String())
 	}
 
 	publicGetReq := httptest.NewRequest(http.MethodGet, "http://doc1.domain.com/", nil)
@@ -54,8 +68,8 @@ func TestPublicAndAdminFlows(t *testing.T) {
 	if publicGetResp.Code != http.StatusOK {
 		t.Fatalf("public GET status = %d, want %d", publicGetResp.Code, http.StatusOK)
 	}
-	if body := publicGetResp.Body.String(); body != "hello world" {
-		t.Fatalf("public GET body = %q, want %q", body, "hello world")
+	if body := publicGetResp.Body.String(); body != "hello world updated" {
+		t.Fatalf("public GET body = %q, want %q", body, "hello world updated")
 	}
 	etag := publicGetResp.Header().Get("ETag")
 	if etag == "" {
@@ -95,8 +109,15 @@ func TestPublicAndAdminFlows(t *testing.T) {
 	if contentResp.Code != http.StatusOK {
 		t.Fatalf("content GET status = %d, want %d", contentResp.Code, http.StatusOK)
 	}
-	if contentResp.Body.String() != "hello world" {
-		t.Fatalf("content body = %q, want %q", contentResp.Body.String(), "hello world")
+	if contentResp.Body.String() != "hello world updated" {
+		t.Fatalf("content body = %q, want %q", contentResp.Body.String(), "hello world updated")
+	}
+
+	missingReplaceReq := signedAdminRequest(t, http.MethodPut, "/api/v1/documents/missing", []byte("nope"), fixedTime, "acac1111bbbb2222cccc3333dddd4444")
+	missingReplaceResp := httptest.NewRecorder()
+	handler.ServeHTTP(missingReplaceResp, missingReplaceReq)
+	if missingReplaceResp.Code != http.StatusNotFound || strings.TrimSpace(missingReplaceResp.Body.String()) != `{"error":"not_found"}` {
+		t.Fatalf("replace missing response = (%d, %q)", missingReplaceResp.Code, missingReplaceResp.Body.String())
 	}
 
 	deleteReq := signedAdminRequest(t, http.MethodDelete, "/api/v1/documents/doc1", nil, fixedTime, "dddd1111bbbb2222cccc3333dddd4444")

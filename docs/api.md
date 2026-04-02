@@ -13,7 +13,8 @@ Admin host routes under `/api/v1`:
 - `GET /documents`
 - `GET /documents/:slug`
 - `GET /documents/:slug/content`
-- `PUT /documents/:slug`
+- `POST /documents/:slug` create only
+- `PUT /documents/:slug` replace only
 - `DELETE /documents/:slug`
 
 Authenticated admin requests require:

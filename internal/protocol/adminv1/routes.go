@@ -4,6 +4,7 @@ const (
 	BasePath               = "/api/v1"
 	HealthPath             = BasePath + "/health"
 	DocumentsCollection    = BasePath + "/documents"
+	DocumentsRelativePath  = "/documents"
 	DocumentPathPattern    = "/documents/:slug"
 	DocumentContentPattern = "/documents/:slug/content"
 )
