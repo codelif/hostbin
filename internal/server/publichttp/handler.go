@@ -7,9 +7,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"hostbin/internal/domain/documents"
-	"hostbin/internal/server/documentsvc"
-	"hostbin/internal/server/requestmeta"
+	"github.com/codelif/hostbin/internal/domain/documents"
+	"github.com/codelif/hostbin/internal/server/documentsvc"
+	"github.com/codelif/hostbin/internal/server/requestmeta"
 )
 
 type Handler struct {

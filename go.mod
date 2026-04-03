@@ -1,4 +1,4 @@
-module hostbin
+module github.com/codelif/hostbin
 
 go 1.26.1
 

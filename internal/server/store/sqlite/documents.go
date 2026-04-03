@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"hostbin/internal/domain/documents"
+	"github.com/codelif/hostbin/internal/domain/documents"
 )
 
 type DocumentStore struct {

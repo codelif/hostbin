@@ -5,8 +5,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"hostbin/internal/protocol/adminv1"
-	"hostbin/internal/server/middleware"
+	"github.com/codelif/hostbin/internal/protocol/adminv1"
+	"github.com/codelif/hostbin/internal/server/middleware"
 )
 
 func NewEngine(handler *Handler, maxDocSize int64, authMiddleware gin.HandlerFunc) *gin.Engine {

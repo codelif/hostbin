@@ -7,10 +7,10 @@ import (
 
 	"golang.org/x/term"
 
-	cliapp "hostbin/internal/cli/app"
-	cliconfig "hostbin/internal/cli/config"
-	clihttp "hostbin/internal/cli/http"
-	"hostbin/internal/domain/slugs"
+	cliapp "github.com/codelif/hostbin/internal/cli/app"
+	cliconfig "github.com/codelif/hostbin/internal/cli/config"
+	clihttp "github.com/codelif/hostbin/internal/cli/http"
+	"github.com/codelif/hostbin/internal/domain/slugs"
 )
 
 func loadClient(app *cliapp.App) (*cliconfig.Store, cliconfig.File, *clihttp.Client, error) {

@@ -7,11 +7,11 @@ import (
 
 	"github.com/spf13/cobra"
 
-	cliapp "hostbin/internal/cli/app"
-	clieditor "hostbin/internal/cli/editor"
-	"hostbin/internal/cli/input"
-	"hostbin/internal/cli/ui"
-	"hostbin/internal/protocol/adminv1"
+	cliapp "github.com/codelif/hostbin/internal/cli/app"
+	clieditor "github.com/codelif/hostbin/internal/cli/editor"
+	"github.com/codelif/hostbin/internal/cli/input"
+	"github.com/codelif/hostbin/internal/cli/ui"
+	"github.com/codelif/hostbin/internal/protocol/adminv1"
 )
 
 func newNewCommand(app *cliapp.App) *cobra.Command {

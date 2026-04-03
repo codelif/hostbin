@@ -11,9 +11,9 @@ import (
 	"strings"
 	"time"
 
-	cliconfig "hostbin/internal/cli/config"
-	"hostbin/internal/protocol/adminv1"
-	"hostbin/internal/protocol/authsig"
+	cliconfig "github.com/codelif/hostbin/internal/cli/config"
+	"github.com/codelif/hostbin/internal/protocol/adminv1"
+	"github.com/codelif/hostbin/internal/protocol/authsig"
 )
 
 type Client struct {

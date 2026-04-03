@@ -5,8 +5,8 @@ import (
 
 	"go.uber.org/zap"
 
-	"hostbin/internal/domain/hosts"
-	"hostbin/internal/server/requestmeta"
+	"github.com/codelif/hostbin/internal/domain/hosts"
+	"github.com/codelif/hostbin/internal/server/requestmeta"
 )
 
 func Recovery(logger *zap.Logger, next http.Handler) http.Handler {

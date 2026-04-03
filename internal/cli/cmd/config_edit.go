@@ -5,9 +5,9 @@ import (
 
 	"github.com/spf13/cobra"
 
-	cliapp "hostbin/internal/cli/app"
-	cliconfig "hostbin/internal/cli/config"
-	clieditor "hostbin/internal/cli/editor"
+	cliapp "github.com/codelif/hostbin/internal/cli/app"
+	cliconfig "github.com/codelif/hostbin/internal/cli/config"
+	clieditor "github.com/codelif/hostbin/internal/cli/editor"
 )
 
 func newConfigEditCommand(app *cliapp.App) *cobra.Command {

@@ -10,11 +10,11 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"hostbin/internal/clock"
-	"hostbin/internal/domain/hosts"
-	"hostbin/internal/protocol/adminv1"
-	"hostbin/internal/protocol/authsig"
-	"hostbin/internal/server/nonce"
+	"github.com/codelif/hostbin/internal/clock"
+	"github.com/codelif/hostbin/internal/domain/hosts"
+	"github.com/codelif/hostbin/internal/protocol/adminv1"
+	"github.com/codelif/hostbin/internal/protocol/authsig"
+	"github.com/codelif/hostbin/internal/server/nonce"
 )
 
 type Verifier struct {

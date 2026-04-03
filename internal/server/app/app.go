@@ -8,17 +8,17 @@ import (
 
 	"go.uber.org/zap"
 
-	"hostbin/internal/clock"
-	"hostbin/internal/server/adminauth"
-	"hostbin/internal/server/adminhttp"
-	serverconfig "hostbin/internal/server/config"
-	"hostbin/internal/server/dispatch"
-	"hostbin/internal/server/documentsvc"
-	"hostbin/internal/server/logging"
-	"hostbin/internal/server/middleware"
-	"hostbin/internal/server/nonce"
-	"hostbin/internal/server/publichttp"
-	"hostbin/internal/server/store/sqlite"
+	"github.com/codelif/hostbin/internal/clock"
+	"github.com/codelif/hostbin/internal/server/adminauth"
+	"github.com/codelif/hostbin/internal/server/adminhttp"
+	serverconfig "github.com/codelif/hostbin/internal/server/config"
+	"github.com/codelif/hostbin/internal/server/dispatch"
+	"github.com/codelif/hostbin/internal/server/documentsvc"
+	"github.com/codelif/hostbin/internal/server/logging"
+	"github.com/codelif/hostbin/internal/server/middleware"
+	"github.com/codelif/hostbin/internal/server/nonce"
+	"github.com/codelif/hostbin/internal/server/publichttp"
+	"github.com/codelif/hostbin/internal/server/store/sqlite"
 )
 
 type Options struct {

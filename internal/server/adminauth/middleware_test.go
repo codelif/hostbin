@@ -12,10 +12,10 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"hostbin/internal/clock"
-	"hostbin/internal/protocol/authsig"
-	"hostbin/internal/server/middleware"
-	"hostbin/internal/server/nonce"
+	"github.com/codelif/hostbin/internal/clock"
+	"github.com/codelif/hostbin/internal/protocol/authsig"
+	"github.com/codelif/hostbin/internal/server/middleware"
+	"github.com/codelif/hostbin/internal/server/nonce"
 )
 
 func TestVerifierValidSignature(t *testing.T) {

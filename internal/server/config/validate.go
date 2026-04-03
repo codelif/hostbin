@@ -5,8 +5,8 @@ import (
 	"net"
 	"strings"
 
-	"hostbin/internal/domain/slugs"
-	"hostbin/internal/protocol/authsig"
+	"github.com/codelif/hostbin/internal/domain/slugs"
+	"github.com/codelif/hostbin/internal/protocol/authsig"
 )
 
 func Validate(cfg Config) error {

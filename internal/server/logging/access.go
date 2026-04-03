@@ -8,7 +8,7 @@ import (
 
 	"go.uber.org/zap"
 
-	"hostbin/internal/server/requestmeta"
+	"github.com/codelif/hostbin/internal/server/requestmeta"
 )
 
 func Middleware(logger *zap.Logger, trustProxyHeaders bool, trustedProxyNets []*net.IPNet) func(http.Handler) http.Handler {

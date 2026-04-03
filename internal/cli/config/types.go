@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"hostbin/internal/protocol/authsig"
+	"github.com/codelif/hostbin/internal/protocol/authsig"
 )
 
 const (

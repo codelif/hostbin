@@ -5,7 +5,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	cliapp "hostbin/internal/cli/app"
+	cliapp "github.com/codelif/hostbin/internal/cli/app"
 )
 
 func NewRootCommand(stdout, stderr io.Writer) *cobra.Command {

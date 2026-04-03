@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"hostbin/internal/cli/cmd"
+	"github.com/codelif/hostbin/internal/cli/cmd"
 )
 
 func main() {

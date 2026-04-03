@@ -12,8 +12,8 @@ import (
 
 	"github.com/spf13/cobra"
 
-	cliapp "hostbin/internal/cli/app"
-	cliconfig "hostbin/internal/cli/config"
+	cliapp "github.com/codelif/hostbin/internal/cli/app"
+	cliconfig "github.com/codelif/hostbin/internal/cli/config"
 )
 
 func newConfigInitCommand(app *cliapp.App) *cobra.Command {

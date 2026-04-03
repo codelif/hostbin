@@ -7,8 +7,8 @@ import (
 	"strconv"
 	"time"
 
-	"hostbin/internal/protocol/adminv1"
-	"hostbin/internal/protocol/authsig"
+	"github.com/codelif/hostbin/internal/protocol/adminv1"
+	"github.com/codelif/hostbin/internal/protocol/authsig"
 )
 
 var (

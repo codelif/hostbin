@@ -5,7 +5,7 @@ import (
 	"encoding/hex"
 	"net/http"
 
-	"hostbin/internal/server/requestmeta"
+	"github.com/codelif/hostbin/internal/server/requestmeta"
 )
 
 const requestIDHeader = "X-Request-ID"

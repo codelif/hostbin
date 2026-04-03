@@ -5,8 +5,8 @@ import (
 	"io"
 	"text/tabwriter"
 
-	"hostbin/internal/cli/format"
-	"hostbin/internal/protocol/adminv1"
+	"github.com/codelif/hostbin/internal/cli/format"
+	"github.com/codelif/hostbin/internal/protocol/adminv1"
 )
 
 func PrintDocumentTable(w io.Writer, documents []adminv1.DocumentResponse) error {

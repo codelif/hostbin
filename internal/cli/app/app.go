@@ -3,8 +3,8 @@ package app
 import (
 	"io"
 
-	cliconfig "hostbin/internal/cli/config"
-	clihttp "hostbin/internal/cli/http"
+	cliconfig "github.com/codelif/hostbin/internal/cli/config"
+	clihttp "github.com/codelif/hostbin/internal/cli/http"
 )
 
 type App struct {

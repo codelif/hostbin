@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"io"
 
-	cliconfig "hostbin/internal/cli/config"
-	"hostbin/internal/cli/format"
-	"hostbin/internal/protocol/adminv1"
+	cliconfig "github.com/codelif/hostbin/internal/cli/config"
+	"github.com/codelif/hostbin/internal/cli/format"
+	"github.com/codelif/hostbin/internal/protocol/adminv1"
 )
 
 func PrintConfigSummary(w io.Writer, path string, cfg cliconfig.File) error {

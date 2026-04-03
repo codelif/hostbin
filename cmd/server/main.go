@@ -10,8 +10,8 @@ import (
 	"syscall"
 	"time"
 
-	"hostbin/internal/server/app"
-	"hostbin/internal/server/config"
+	"github.com/codelif/hostbin/internal/server/app"
+	"github.com/codelif/hostbin/internal/server/config"
 )
 
 func main() {

@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"hostbin/internal/domain/documents"
+	"github.com/codelif/hostbin/internal/domain/documents"
 )
 
 func TestDocumentStoreLifecycle(t *testing.T) {

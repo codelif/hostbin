@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	"hostbin/internal/domain/slugs"
+	"github.com/codelif/hostbin/internal/domain/slugs"
 )
 
 var ErrInvalidHost = errors.New("invalid host")

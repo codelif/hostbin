@@ -3,7 +3,7 @@ package requestmeta
 import (
 	"context"
 
-	"hostbin/internal/domain/hosts"
+	"github.com/codelif/hostbin/internal/domain/hosts"
 )
 
 type Meta struct {

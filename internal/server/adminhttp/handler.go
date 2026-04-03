@@ -12,11 +12,11 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"hostbin/internal/domain/documents"
-	"hostbin/internal/domain/hosts"
-	"hostbin/internal/domain/slugs"
-	"hostbin/internal/protocol/adminv1"
-	"hostbin/internal/server/documentsvc"
+	"github.com/codelif/hostbin/internal/domain/documents"
+	"github.com/codelif/hostbin/internal/domain/hosts"
+	"github.com/codelif/hostbin/internal/domain/slugs"
+	"github.com/codelif/hostbin/internal/protocol/adminv1"
+	"github.com/codelif/hostbin/internal/server/documentsvc"
 )
 
 type Handler struct {

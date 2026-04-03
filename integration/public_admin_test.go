@@ -13,10 +13,10 @@ import (
 
 	"go.uber.org/zap"
 
-	"hostbin/internal/clock"
-	"hostbin/internal/protocol/authsig"
-	"hostbin/internal/server/app"
-	"hostbin/internal/server/config"
+	"github.com/codelif/hostbin/internal/clock"
+	"github.com/codelif/hostbin/internal/protocol/authsig"
+	"github.com/codelif/hostbin/internal/server/app"
+	"github.com/codelif/hostbin/internal/server/config"
 )
 
 func TestPublicAndAdminFlows(t *testing.T) {

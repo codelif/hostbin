@@ -3,8 +3,8 @@ package documentsvc
 import (
 	"context"
 
-	"hostbin/internal/clock"
-	"hostbin/internal/domain/documents"
+	"github.com/codelif/hostbin/internal/clock"
+	"github.com/codelif/hostbin/internal/domain/documents"
 )
 
 type Service struct {

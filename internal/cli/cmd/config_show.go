@@ -3,8 +3,8 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 
-	cliapp "hostbin/internal/cli/app"
-	"hostbin/internal/cli/ui"
+	cliapp "github.com/codelif/hostbin/internal/cli/app"
+	"github.com/codelif/hostbin/internal/cli/ui"
 )
 
 func newConfigShowCommand(app *cliapp.App) *cobra.Command {
