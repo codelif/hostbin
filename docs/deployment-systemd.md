@@ -19,7 +19,7 @@ Use this page if you want to run the server directly on a Linux host without con
 - DNS provider integration
 - reverse proxy certificate management
 
-For a full production example with Cloudflare and Caddy, use `docs/deployment-cloudflare-caddy-systemd.md`.
+For a full production example with Cloudflare and Caddy, use [Cloudflare + Caddy + systemd](deployment-cloudflare-caddy-systemd.md).
 
 ## Recommended install layout
 
@@ -80,7 +80,7 @@ Field notes:
 - `ADMIN_HOST` must be under `BASE_DOMAIN`
 - `PRESHARED_KEY` must be at least 32 bytes
 - `RESERVED_SUBDOMAINS` should include the admin label and any labels you never want claimable as public documents
-- enable `TRUST_PROXY_HEADERS` only when requests arrive from a trusted proxy
+- enable `TRUST_PROXY_HEADERS` only when requests arrive from a trusted proxy; see [Overview: Reverse proxy requirements](overview.md#reverse-proxy-requirements)
 
 Generate a secret with:
 
@@ -145,9 +145,10 @@ Pair this with a reverse proxy that:
 
 See:
 
-- `docs/deployment-caddy.md`
-- `docs/deployment-nginx.md`
-- `docs/deployment-cloudflare-caddy-systemd.md`
+- [Overview: Reverse proxy requirements](overview.md#reverse-proxy-requirements)
+- [Caddy](deployment-caddy.md)
+- [nginx](deployment-nginx.md)
+- [Cloudflare + Caddy + systemd](deployment-cloudflare-caddy-systemd.md)
 
 ## Day-2 commands
 
@@ -172,6 +173,6 @@ sudo systemctl start hostbin
 
 ## Next steps
 
-- full Cloudflare + Caddy production runbook: `docs/deployment-cloudflare-caddy-systemd.md`
-- operations: `docs/operations.md`
-- troubleshooting: `docs/troubleshooting.md`
+- full Cloudflare + Caddy production runbook: [Cloudflare + Caddy + systemd](deployment-cloudflare-caddy-systemd.md)
+- operations: [Operations](operations.md)
+- troubleshooting: [Troubleshooting](troubleshooting.md)

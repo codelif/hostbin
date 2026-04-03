@@ -47,7 +47,7 @@ Typical production database path:
 /var/lib/hostbin/data.db
 ```
 
-Your actual location is controlled by `DB_PATH`.
+Your actual location is controlled by `DB_PATH`. See [systemd](deployment-systemd.md#recommended-install-layout) for the default native install layout.
 
 ## Backups
 
@@ -59,7 +59,7 @@ sudo cp /var/lib/hostbin/data.db /var/lib/hostbin/data.db.bak.$(date +%F-%H%M%S)
 sudo systemctl start hostbin
 ```
 
-Store backups outside the VM as well if the deployment matters.
+Store backups outside the VM as well if the deployment matters. For SQLite-specific background, see the [official SQLite documentation](https://www.sqlite.org/docs.html).
 
 ## Restore
 
@@ -100,12 +100,12 @@ To rotate `PRESHARED_KEY`:
 3. update every `hbcli` config that uses the old key
 4. run `hbcli config check`
 
-During rotation, old clients fail auth until updated.
+During rotation, old clients fail auth until updated. The client-side config location and fields are documented in [CLI: Configuration file](cli.md#configuration-file).
 
 ## Capacity and limits
 
 - `MAX_DOC_SIZE` controls the app-side document size limit
-- your reverse proxy body limit must match or exceed it
+- your reverse proxy body limit must match or exceed it; see [Deployment](deployment.md#invariants-for-every-deployment)
 - SQLite is simple and effective, but storage, backup, and I/O sizing still matter on very busy hosts
 
 ## Host and proxy changes
@@ -142,6 +142,7 @@ curl -i https://hello.example.com/
 
 ## Related docs
 
-- deployment index: `docs/deployment.md`
-- production deployment: `docs/deployment-cloudflare-caddy-systemd.md`
-- troubleshooting: `docs/troubleshooting.md`
+- deployment index: [Deployment](deployment.md)
+- production deployment: [Cloudflare + Caddy + systemd](deployment-cloudflare-caddy-systemd.md)
+- API smoke-check targets: [API](api.md)
+- troubleshooting: [Troubleshooting](troubleshooting.md)

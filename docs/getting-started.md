@@ -18,6 +18,8 @@ Use this page if you want to prove the project works on your machine before sett
 - reverse proxy setup
 - hardened systemd deployment
 
+For those topics, jump to [Deployment](deployment.md) or the full [Cloudflare + Caddy + systemd guide](deployment-cloudflare-caddy-systemd.md).
+
 ## Prerequisites
 
 - Go toolchain compatible with the repository
@@ -79,7 +81,7 @@ Using `lvh.me` avoids that problem:
 - `hbcli` can talk to the exact admin host without custom headers
 - public document fetches work without manual `Host` overrides
 
-If you need a fully offline setup, see the fallback note at the end of this page.
+If you need a fully offline setup, see the [fallback note](#10-fallback-if-lvhme-is-not-suitable) at the end of this page and the related [troubleshooting entry](troubleshooting.md#local-development-works-with-curl-but-not-comfortably-with-hbcli).
 
 ## 4. Start the server
 
@@ -129,7 +131,7 @@ OK server reachable
 OK authentication valid
 ```
 
-The config file is written to `~/.config/hbcli/config.toml` unless you pass `--config`.
+The config file is written to `~/.config/hbcli/config.toml` unless you pass `--config`. For more bootstrap options, see [CLI: Bootstrap config](cli.md#bootstrap-config).
 
 ## 7. Create a document
 
@@ -198,7 +200,7 @@ Example fallback public test:
 curl -i -H 'Host: hello.example.test' http://127.0.0.1:8080/
 ```
 
-This fallback is useful for debugging, but it is not the recommended default onboarding path.
+This fallback is useful for debugging, but it is not the recommended default onboarding path. If hostname resolution is the main issue, see [Troubleshooting](troubleshooting.md#local-development-works-with-curl-but-not-comfortably-with-hbcli).
 
 ## 11. Clean up
 
@@ -207,6 +209,7 @@ This fallback is useful for debugging, but it is not the recommended default onb
 
 ## Next steps
 
-- CLI details: `docs/cli.md`
-- full deployment options: `docs/deployment.md`
-- recommended production guide: `docs/deployment-cloudflare-caddy-systemd.md`
+- CLI details: [CLI](cli.md)
+- daily CLI commands: [CLI: Daily commands](cli.md#daily-commands)
+- full deployment options: [Deployment](deployment.md)
+- recommended production guide: [Cloudflare + Caddy + systemd](deployment-cloudflare-caddy-systemd.md)

@@ -8,23 +8,23 @@ Use it to choose the right deployment guide for your environment.
 
 For a public VM deployment with wildcard hosts and Caddy in front, start here:
 
-- `docs/deployment-cloudflare-caddy-systemd.md`
+- [Cloudflare + Caddy + systemd](deployment-cloudflare-caddy-systemd.md)
 
 That guide covers DNS, TLS, Cloudflare, systemd, Caddy, verification, and basic operations.
 
 ## Deployment building blocks
 
-- native service install: `docs/deployment-systemd.md`
-- minimal Caddy reverse-proxy reference: `docs/deployment-caddy.md`
-- minimal nginx reverse-proxy reference: `docs/deployment-nginx.md`
+- native service install: [systemd](deployment-systemd.md)
+- minimal Caddy reverse-proxy reference: [Caddy](deployment-caddy.md)
+- minimal nginx reverse-proxy reference: [nginx](deployment-nginx.md)
 
 ## Picking a guide
 
-- evaluating locally -> `docs/getting-started.md`
-- deploying on a Linux VM with `systemd` -> `docs/deployment-systemd.md`
-- using Cloudflare and wildcard public hosts -> `docs/deployment-cloudflare-caddy-systemd.md`
-- using Caddy but you already know how to manage certificates and services -> `docs/deployment-caddy.md`
-- using nginx and managing TLS separately -> `docs/deployment-nginx.md`
+- evaluating locally -> [Getting Started](getting-started.md)
+- deploying on a Linux VM with `systemd` -> [systemd](deployment-systemd.md)
+- using Cloudflare and wildcard public hosts -> [Cloudflare + Caddy + systemd](deployment-cloudflare-caddy-systemd.md)
+- using Caddy but you already know how to manage certificates and services -> [Caddy](deployment-caddy.md)
+- using nginx and managing TLS separately -> [nginx](deployment-nginx.md)
 
 ## Invariants for every deployment
 
@@ -46,4 +46,9 @@ Once the service is live:
 - fetch that document from its public hostname
 - confirm logging, restart behavior, and backups
 
-See `docs/operations.md` and `docs/troubleshooting.md` for day-2 guidance.
+See [Operations](operations.md) and [Troubleshooting](troubleshooting.md) for day-2 guidance.
+
+## See also
+
+- [Overview](overview.md#reverse-proxy-requirements) for why `Host` preservation is part of the runtime contract
+- [API](api.md#host-routing-requirements) for the HTTP-facing routing assumptions

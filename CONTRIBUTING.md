@@ -23,7 +23,7 @@ Built binaries are written to `bin/`.
 
 ## Local development
 
-For local development, you can either use a wildcard loopback domain such as `lvh.me` or edit your /etc/hosts file
+For local development, you can either use a wildcard loopback domain such as `lvh.me` or edit your `/etc/hosts` file. The [Getting Started guide](docs/getting-started.md) explains the recommended local flow, and [Why `lvh.me` is the easiest local setup](docs/getting-started.md#3-why-lvhme-is-the-easiest-local-setup) covers why hostname-based routing matters.
 
 Example `.env` values:
 
@@ -70,6 +70,12 @@ curl http://hello.lvh.me:8080/
 - `internal/server` - app wiring, auth, dispatch, handlers, logging, and storage
 - `docs` - product, deployment, operations, and troubleshooting docs
 
+See also:
+
+- [README](README.md) for the top-level project map and development commands
+- [Architecture](docs/architecture.md) for contributor-oriented package layout notes
+- [Getting Started](docs/getting-started.md) for the local evaluation workflow
+
 ## Expectations for changes
 
 - keep the host-based routing model intact
@@ -86,7 +92,7 @@ Please run:
 make test
 ```
 
-If your change affects documentation, examples, or local workflows, sanity-check the relevant docs as well.
+If your change affects documentation, examples, or local workflows, sanity-check the relevant docs as well. The [development commands in `README.md`](README.md#development-commands) are the baseline checks.
 
 ## Pull request guidance
 

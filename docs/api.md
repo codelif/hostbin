@@ -22,7 +22,7 @@ Then:
 - `hello.example.com` -> public document for slug `hello`
 - `a.b.example.com` -> invalid
 
-If a reverse proxy rewrites `Host`, the request may be routed to the wrong surface or rejected entirely.
+If a reverse proxy rewrites `Host`, the request may be routed to the wrong surface or rejected entirely. See the [routing model overview](overview.md#routing-model) and the [deployment invariants](deployment.md#invariants-for-every-deployment).
 
 ## Public document endpoints
 
@@ -43,7 +43,7 @@ Returns the same headers as `GET /` without the response body.
 
 ### Conditional requests
 
-If `If-None-Match` matches the current `ETag`, the server returns `304 Not Modified`.
+If `If-None-Match` matches the current `ETag`, the server returns `304 Not Modified`. For HTTP semantics, see [RFC 9110: `ETag`](https://www.rfc-editor.org/rfc/rfc9110.html#name-etag), [RFC 9110: `If-None-Match`](https://www.rfc-editor.org/rfc/rfc9110.html#name-if-none-match), and [RFC 9110: `HEAD`](https://www.rfc-editor.org/rfc/rfc9110.html#name-head).
 
 Example:
 
@@ -68,7 +68,7 @@ All admin routes except `GET /api/v1/health` require signed headers:
 - `X-Nonce`
 - `X-Signature`
 
-The bundled `hbcli` client signs requests for you. If you are writing your own client, the signature input is built from:
+The bundled [`hbcli`](cli.md) client signs requests for you. If you are writing your own client, the signature input is built from:
 
 ```text
 <METHOD>
@@ -168,6 +168,8 @@ For `POST` and `PUT` document writes:
 - body must be valid UTF-8
 - body size must not exceed `MAX_DOC_SIZE`
 
+If uploads fail, the most common causes are covered in [Troubleshooting](troubleshooting.md#uploads-fail-with-document-too-large), [Troubleshooting](troubleshooting.md#uploads-fail-with-bad_request), and [Troubleshooting](troubleshooting.md#uploads-fail-with-invalid_utf8).
+
 Example content upload with a custom client after signing:
 
 ```http
@@ -215,6 +217,10 @@ Typical HTTP status mappings:
 
 ## Recommended client path
 
-For shell use and most automation, prefer `hbcli` over hand-rolled signing logic.
+For shell use and most automation, prefer [`hbcli`](cli.md) over hand-rolled signing logic.
 
-See `docs/cli.md` for examples.
+## See also
+
+- [Overview](overview.md) for the routing and deployment assumptions behind the API
+- [CLI](cli.md) for the supported client workflows
+- [Troubleshooting](troubleshooting.md) for common upload, auth, and routing failures

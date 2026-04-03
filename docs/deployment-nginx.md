@@ -6,7 +6,7 @@ It is intentionally not a full deployment guide. It focuses on the nginx setting
 
 ## Reverse proxy requirements
 
-- preserve the original `Host` header
+- preserve the original `Host` header; see [API: Host routing requirements](api.md#host-routing-requirements)
 - terminate TLS before forwarding to the Go app
 - do not rewrite request path, query string, or body
 - keep proxy body limits aligned with `MAX_DOC_SIZE`
@@ -38,6 +38,8 @@ server {
 - do not add a URI suffix to `proxy_pass`, or nginx may rewrite the upstream path
 - `client_max_body_size` must match the app-side upload size limit
 
+The upstream directives are documented in the nginx docs for [`proxy_set_header`](https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_set_header), [`proxy_pass`](https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_pass), [`client_max_body_size`](https://nginx.org/en/docs/http/ngx_http_core_module.html#client_max_body_size), and [`server_name`](https://nginx.org/en/docs/http/server_names.html).
+
 ## Smoke checks
 
 Public host:
@@ -54,6 +56,6 @@ curl --resolve hbadmin.example.com:443:127.0.0.1 https://hbadmin.example.com/api
 
 ## Related docs
 
-- native service deployment: `docs/deployment-systemd.md`
-- production operations: `docs/operations.md`
-- troubleshooting: `docs/troubleshooting.md`
+- native service deployment: [systemd](deployment-systemd.md)
+- production operations: [Operations](operations.md)
+- troubleshooting: [Troubleshooting](troubleshooting.md)

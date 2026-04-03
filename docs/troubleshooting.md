@@ -21,7 +21,7 @@ curl -i -H 'Host: hbadmin.example.com' http://127.0.0.1:8080/api/v1/health
 Fix:
 
 - confirm `ADMIN_HOST` matches the hostname you are using
-- confirm the proxy passes through the original `Host` header
+- confirm the proxy passes through the original `Host` header; see [Overview: Reverse proxy requirements](overview.md#reverse-proxy-requirements), [Caddy](deployment-caddy.md), and [nginx](deployment-nginx.md)
 
 ## Public hostname returns 404
 
@@ -41,7 +41,7 @@ Fix:
 
 - create the missing document
 - use a non-reserved slug
-- use `slug.example.com`, not `a.b.example.com`
+- use `slug.example.com`, not `a.b.example.com`; the routing rules are summarized in [Overview: Routing model](overview.md#routing-model)
 
 ## `hbcli config check` fails health check
 
@@ -62,7 +62,7 @@ Fix:
 
 - set `server_url` to the exact admin host
 - fix DNS or your local hosts entry
-- restart the service if needed
+- restart the service if needed; see [CLI: Bootstrap config](cli.md#bootstrap-config) and [Operations](operations.md#service-control)
 
 ## Local development works with curl but not comfortably with `hbcli`
 
@@ -74,7 +74,7 @@ Fix:
 
 - use `BASE_DOMAIN=lvh.me`
 - use `ADMIN_HOST=hbadmin.lvh.me`
-- point `hbcli` at `http://hbadmin.lvh.me:8080`
+- point `hbcli` at `http://hbadmin.lvh.me:8080`; the full example lives in [Getting Started](getting-started.md#6-initialize-hbcli)
 
 Example:
 
@@ -100,7 +100,7 @@ Fix:
 
 - update the CLI config with the correct key
 - confirm the proxy preserves `Host`, path, and query string
-- sync server and client clocks
+- sync server and client clocks; see [CLI](cli.md) and [API: Admin auth model](api.md#admin-auth-model)
 
 ## Uploads fail with document too large
 
@@ -112,7 +112,7 @@ Likely causes:
 Fix:
 
 - increase `MAX_DOC_SIZE` if appropriate
-- raise the proxy body limit to the same value
+- raise the proxy body limit to the same value; see [Caddy](deployment-caddy.md) and [nginx](deployment-nginx.md)
 
 ## Uploads fail with `bad_request`
 
@@ -124,7 +124,7 @@ Likely causes:
 Fix:
 
 - send `text/plain` or `text/plain; charset=utf-8`
-- use `hbcli` if you are unsure about request formatting
+- use `hbcli` if you are unsure about request formatting; the request rules are listed in [API: Upload requirements](api.md#upload-requirements)
 
 ## Uploads fail with `invalid_utf8`
 
@@ -134,7 +134,7 @@ Cause:
 
 Fix:
 
-- re-encode the source file as UTF-8 before upload
+- re-encode the source file as UTF-8 before upload; see [API: Upload requirements](api.md#upload-requirements)
 
 ## Wildcard TLS certificate issuance fails
 
@@ -153,7 +153,7 @@ sudo journalctl -u caddy -n 100 --no-pager
 Fix:
 
 - rebuild Caddy with `github.com/caddy-dns/cloudflare`
-- verify token scope and environment file permissions
+- verify token scope and environment file permissions; see the [Caddy DNS challenge docs](https://caddyserver.com/docs/automatic-https#dns-challenge) and [Cloudflare API token docs](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/)
 
 ## Cloudflare is enabled but HTTPS still fails
 
@@ -164,7 +164,7 @@ Likely causes:
 
 Fix:
 
-- set Cloudflare SSL/TLS mode to `Full (strict)`
+- set Cloudflare SSL/TLS mode to `Full (strict)`; see the [Cloudflare encryption mode docs](https://developers.cloudflare.com/ssl/origin-configuration/ssl-modes/full-strict/)
 - verify Caddy is running and has obtained certificates successfully
 
 ## Client IPs or scheme look wrong in logs
@@ -177,7 +177,7 @@ Likely causes:
 Fix:
 
 - enable `TRUST_PROXY_HEADERS` only when traffic comes through a trusted proxy
-- set `TRUSTED_PROXY_CIDRS` correctly for that proxy path
+- set `TRUSTED_PROXY_CIDRS` correctly for that proxy path; see [Overview: Reverse proxy requirements](overview.md#reverse-proxy-requirements)
 
 ## Delete fails in automation
 
@@ -200,4 +200,10 @@ sudo journalctl -u hostbin -f
 sudo journalctl -u caddy -f
 ```
 
-Then run smoke checks from `docs/operations.md`.
+Then run the smoke checks from [Operations](operations.md#suggested-smoke-checks-after-any-change).
+
+## See also
+
+- [Operations](operations.md) for service control, logs, and smoke checks
+- [Deployment](deployment.md) for picking the right deployment reference
+- [CLI](cli.md) for config and command usage details

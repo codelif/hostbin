@@ -33,11 +33,11 @@ Then:
 - `https://www.example.com/` -> rejected if `www` is reserved
 - `https://a.b.example.com/` -> rejected; public hosts must be single-label subdomains
 
-This routing model is enforced by the application, not just by the reverse proxy. The proxy must preserve the original `Host` header.
+This routing model is enforced by the application, not just by the reverse proxy. For more detail, see the [routing model in the overview](docs/overview.md#routing-model). The proxy must preserve the original `Host` header.
 
 ## Quickstart
 
-For a local evaluation flow, see `docs/getting-started.md`.
+For a local evaluation flow, see the [local evaluation guide](docs/getting-started.md).
 
 High level:
 
@@ -54,25 +54,25 @@ For local development, prefer:
 
 That lets `hbcli` talk to `http://hbadmin.lvh.me:8080` and lets you fetch public docs at `http://hello.lvh.me:8080/` without custom `Host` headers.
 
-Otherwise you can edit your /etc/hosts file
+Otherwise you can edit your `/etc/hosts` file; the [fallback section in Getting Started](docs/getting-started.md#10-fallback-if-lvhme-is-not-suitable) covers the tradeoffs.
 
 ## Deployment Paths
 
-- recommended production runbook: `docs/deployment-cloudflare-caddy-systemd.md`
-- deployment index: `docs/deployment.md`
-- native service install details: `docs/deployment-systemd.md`
-- minimal Caddy proxy reference: `docs/deployment-caddy.md`
-- minimal nginx proxy reference: `docs/deployment-nginx.md`
+- recommended production runbook: [Cloudflare + Caddy + systemd](docs/deployment-cloudflare-caddy-systemd.md)
+- deployment index: [Deployment](docs/deployment.md)
+- native service install details: [systemd](docs/deployment-systemd.md)
+- minimal Caddy proxy reference: [Caddy](docs/deployment-caddy.md)
+- minimal nginx proxy reference: [nginx](docs/deployment-nginx.md)
 
 ## Documentation
 
-- product and routing model: `docs/overview.md`
-- local first run: `docs/getting-started.md`
-- CLI usage: `docs/cli.md`
-- API reference: `docs/api.md`
-- production operations: `docs/operations.md`
-- troubleshooting: `docs/troubleshooting.md`
-- architecture for contributors: `docs/architecture.md`
+- product and routing model: [Overview](docs/overview.md)
+- local first run: [Getting Started](docs/getting-started.md)
+- CLI usage: [CLI](docs/cli.md)
+- API reference: [API](docs/api.md)
+- production operations: [Operations](docs/operations.md)
+- troubleshooting: [Troubleshooting](docs/troubleshooting.md)
+- architecture for contributors: [Architecture](docs/architecture.md)
 
 ## Repository Layout
 
@@ -94,7 +94,8 @@ Otherwise you can edit your /etc/hosts file
 
 ## First Things To Read
 
-- evaluating the project: `docs/overview.md`
-- trying it locally: `docs/getting-started.md`
-- deploying it on a VM: `docs/deployment-cloudflare-caddy-systemd.md`
-- integrating with the admin API: `docs/api.md`
+- evaluating the project: [Overview](docs/overview.md)
+- trying it locally: [Getting Started](docs/getting-started.md)
+- deploying it on a VM: [Cloudflare + Caddy + systemd](docs/deployment-cloudflare-caddy-systemd.md)
+- integrating with the admin API: [API](docs/api.md)
+- contributing changes: [Contributing](CONTRIBUTING.md)

@@ -35,7 +35,7 @@ Use this guide if you want one practical, real-world deployment path with wildca
 
 ## 1. Prepare DNS in Cloudflare
 
-Create these records for your zone:
+Create these records for your zone. Cloudflare's DNS reference is here: [DNS records](https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-dns-records/).
 
 - `A` or `AAAA` record for `hbadmin` -> your VM IP
 - wildcard `A` or `AAAA` record for `*` -> your VM IP
@@ -48,7 +48,7 @@ In Cloudflare SSL/TLS settings, use:
 
 - `Full (strict)`
 
-Do not use `Flexible`; the origin should present a valid certificate to Cloudflare.
+Do not use `Flexible`; the origin should present a valid certificate to Cloudflare. Cloudflare documents this mode at [Full (strict)](https://developers.cloudflare.com/ssl/origin-configuration/ssl-modes/full-strict/).
 
 ## 3. Create a Cloudflare API token for DNS challenge
 
@@ -57,7 +57,7 @@ Create a token scoped to the zone with at least:
 - `Zone:Read`
 - `DNS:Edit`
 
-Limit it to the specific zone for this deployment.
+Limit it to the specific zone for this deployment. See [Create API token](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/).
 
 ## 4. Open firewall ports
 
@@ -112,7 +112,7 @@ sudo chmod 750 /var/lib/hostbin
 
 ## 7. Configure `hostbin`
 
-Edit `/etc/hostbin/hostbin.env`.
+Edit `/etc/hostbin/hostbin.env`. The standalone install details are in [systemd: Configure the environment file](deployment-systemd.md#3-configure-the-environment-file).
 
 Example:
 
@@ -166,7 +166,7 @@ curl -i -H 'Host: hbadmin.example.com' http://127.0.0.1:8080/api/v1/health
 
 ## 9. Build Caddy with the Cloudflare DNS plugin
 
-Wildcard certificates require DNS challenge support. A stock Caddy package is often not enough for `*.example.com` unless it already includes the Cloudflare module.
+Wildcard certificates require DNS challenge support. A stock Caddy package is often not enough for `*.example.com` unless it already includes the Cloudflare module. See the [Caddy DNS challenge docs](https://caddyserver.com/docs/automatic-https#dns-challenge).
 
 Install `xcaddy`:
 
@@ -213,7 +213,7 @@ sudo chmod 640 /etc/caddy/caddy.env
 
 ## 12. Create the Caddyfile
 
-Create `/etc/caddy/Caddyfile`:
+Create `/etc/caddy/Caddyfile`. This is the same core proxy shape described in [Caddy: Minimal Caddyfile example](deployment-caddy.md#minimal-caddyfile-example):
 
 ```caddy
 {
@@ -242,6 +242,7 @@ Important details:
 - `header_up Host {http.request.host}` is required for routing
 - `max_size 1MB` should match `MAX_DOC_SIZE=1048576`
 - the wildcard host and admin host can share one site block
+- related directive references: [Caddyfile](https://caddyserver.com/docs/caddyfile), [`reverse_proxy`](https://caddyserver.com/docs/caddyfile/directives/reverse_proxy), and [`request_body`](https://caddyserver.com/docs/caddyfile/directives/request_body)
 
 ## 13. Create a Caddy systemd unit
 
@@ -324,6 +325,7 @@ curl -i https://hello.example.com/
 
 ## Next steps
 
-- native install details: `docs/deployment-systemd.md`
-- operations: `docs/operations.md`
-- troubleshooting: `docs/troubleshooting.md`
+- native install details: [systemd](deployment-systemd.md)
+- CLI bootstrap and checks: [CLI](cli.md#bootstrap-config)
+- operations: [Operations](operations.md)
+- troubleshooting: [Troubleshooting](troubleshooting.md)

@@ -16,7 +16,7 @@ For a base domain such as `example.com`:
 
 This means the reverse proxy is part of the runtime contract. If it rewrites or normalizes `Host` incorrectly, routing breaks.
 
-For local development, prefer a wildcard loopback domain such as `lvh.me` instead of `localhost` so the app can still receive realistic subdomain hosts.
+For local development, prefer a wildcard loopback domain such as `lvh.me` instead of `localhost` so the app can still receive realistic subdomain hosts. The [Getting Started guide](getting-started.md) uses that setup end to end.
 
 ## Core concepts
 
@@ -72,14 +72,14 @@ Authenticated admin requests require signed headers:
 - `X-Nonce`
 - `X-Signature`
 
-The bundled `hbcli` client handles signing for you.
+The bundled [`hbcli`](cli.md) client handles signing for you. The full route and request details live in the [API reference](api.md#admin-routes).
 
 ## Upload constraints
 
 - `Content-Type` must be `text/plain` or `text/plain; charset=utf-8`
 - request body must be valid UTF-8
 - maximum upload size is controlled by `MAX_DOC_SIZE`
-- the reverse proxy body limit must match `MAX_DOC_SIZE`
+- the reverse proxy body limit must match `MAX_DOC_SIZE`; see the [upload requirements](api.md#upload-requirements) and [Troubleshooting](troubleshooting.md#uploads-fail-with-document-too-large)
 
 ## Storage model
 
@@ -96,11 +96,16 @@ Any reverse proxy in front of `hostbin` must:
 - keep body size limits aligned with `MAX_DOC_SIZE`
 - terminate TLS before forwarding to the local app
 
-If you enable `TRUST_PROXY_HEADERS=true`, only trusted proxy IP ranges should be allowed to set forwarded headers.
+If you enable `TRUST_PROXY_HEADERS=true`, only trusted proxy IP ranges should be allowed to set forwarded headers. The [deployment invariants](deployment.md#invariants-for-every-deployment) and reverse-proxy references build on these assumptions.
 
 ## Recommended reading order
 
-- local evaluation: `docs/getting-started.md`
-- CLI workflows: `docs/cli.md`
-- full production deployment: `docs/deployment-cloudflare-caddy-systemd.md`
-- operational guidance: `docs/operations.md`
+- local evaluation: [Getting Started](getting-started.md)
+- CLI workflows: [CLI](cli.md)
+- full production deployment: [Cloudflare + Caddy + systemd](deployment-cloudflare-caddy-systemd.md)
+- operational guidance: [Operations](operations.md)
+
+## See also
+
+- [API](api.md) for the concrete admin and public HTTP surface
+- [Deployment](deployment.md) for proxy and runtime deployment choices

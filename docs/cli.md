@@ -11,7 +11,7 @@ This page documents `hbcli`, the bundled client for configuring access to a `hos
 - supports interactive and non-interactive document workflows
 - prints document metadata and content in operator-friendly formats
 
-Because the server routes by hostname, `hbcli` works best when your local development setup uses a wildcard loopback domain such as `lvh.me` instead of plain `localhost`.
+Because the server routes by hostname, `hbcli` works best when your local development setup uses a wildcard loopback domain such as `lvh.me` instead of plain `localhost`. See [Getting Started](getting-started.md#3-why-lvhme-is-the-easiest-local-setup) for the recommended local setup.
 
 ## Install
 
@@ -95,6 +95,8 @@ This checks both:
 
 - server reachability via `/api/v1/health`
 - signing/authentication via `/api/v1/auth/check`
+
+Those endpoints are described in the [API reference](api.md#admin-routes).
 
 Local development example:
 
@@ -202,9 +204,9 @@ hbcli --config ~/.config/hbcli/staging.toml config init \
 ## Troubleshooting
 
 - `no configuration found` -> run `hbcli config init`
-- `health check failed` -> confirm `server_url` points to the exact admin host and that DNS or `/etc/hosts` resolves it
-- `auth check failed` -> confirm `auth_key` matches the server `PRESHARED_KEY`
+- `health check failed` -> confirm `server_url` points to the exact admin host and that DNS or `/etc/hosts` resolves it; see [Troubleshooting: `hbcli config check` fails health check](troubleshooting.md#hbcli-config-check-fails-health-check)
+- `auth check failed` -> confirm `auth_key` matches the server `PRESHARED_KEY`; see [Troubleshooting: `hbcli config check` fails auth check](troubleshooting.md#hbcli-config-check-fails-auth-check)
 - `invalid slug` -> use lowercase slug labels only; reserved labels are also rejected
-- localhost-only setup feels broken -> use `lvh.me` or another wildcard loopback domain so `hbcli` can reach the real admin hostname
+- localhost-only setup feels broken -> use `lvh.me` or another wildcard loopback domain so `hbcli` can reach the real admin hostname; see [Troubleshooting: local development works with curl but not comfortably with `hbcli`](troubleshooting.md#local-development-works-with-curl-but-not-comfortably-with-hbcli)
 
-More operational troubleshooting lives in `docs/troubleshooting.md`.
+More operational troubleshooting lives in [Troubleshooting](troubleshooting.md).

@@ -4,11 +4,11 @@ This page is a minimal Caddy reverse-proxy reference for `hostbin`.
 
 It is intentionally not a full deployment guide. It focuses on the proxy behavior the application requires.
 
-If you need wildcard TLS, Cloudflare integration, service setup, and end-to-end host deployment, use `docs/deployment-cloudflare-caddy-systemd.md` instead.
+If you need wildcard TLS, Cloudflare integration, service setup, and end-to-end host deployment, use [Cloudflare + Caddy + systemd](deployment-cloudflare-caddy-systemd.md) instead.
 
 ## Reverse proxy requirements
 
-- preserve the original `Host` header
+- preserve the original `Host` header; see [API: Host routing requirements](api.md#host-routing-requirements)
 - forward requests to the local app without rewriting path or query string
 - keep request body limits aligned with `MAX_DOC_SIZE`
 - optionally restrict the admin host separately with Caddy matchers or a firewall
@@ -40,6 +40,7 @@ hbadmin.example.com, *.example.com {
 - Caddy preserves the request URI by default; avoid adding handlers that rewrite the path or query string
 - if you do not enable `TRUST_PROXY_HEADERS`, forwarded headers are ignored by the app except for raw logging fields
 - if you do enable `TRUST_PROXY_HEADERS`, restrict `TRUSTED_PROXY_CIDRS` to the proxy IP ranges that actually forward traffic
+- the relevant Caddy directives are documented in the [Caddyfile reference](https://caddyserver.com/docs/caddyfile), [`reverse_proxy`](https://caddyserver.com/docs/caddyfile/directives/reverse_proxy), and [`request_body`](https://caddyserver.com/docs/caddyfile/directives/request_body)
 
 ## Smoke checks
 
@@ -57,6 +58,6 @@ curl --resolve hbadmin.example.com:443:127.0.0.1 https://hbadmin.example.com/api
 
 ## Related docs
 
-- native service deployment: `docs/deployment-systemd.md`
-- full Cloudflare + Caddy runbook: `docs/deployment-cloudflare-caddy-systemd.md`
-- troubleshooting: `docs/troubleshooting.md`
+- native service deployment: [systemd](deployment-systemd.md)
+- full Cloudflare + Caddy runbook: [Cloudflare + Caddy + systemd](deployment-cloudflare-caddy-systemd.md)
+- troubleshooting: [Troubleshooting](troubleshooting.md)
