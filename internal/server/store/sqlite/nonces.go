@@ -25,46 +25,53 @@ package sqlite
 import (
 	"context"
 	"database/sql"
+	"time"
+
+	"github.com/codelif/hostbin/internal/server/nonce"
 )
 
-const schemaDocuments = `
-CREATE TABLE IF NOT EXISTS documents (
-    slug TEXT PRIMARY KEY,
-    content BLOB NOT NULL,
-    content_sha256 TEXT NOT NULL,
-    size_bytes INTEGER NOT NULL,
-    created_at TEXT NOT NULL,
-    updated_at TEXT NOT NULL
-);
+type NonceStore struct {
+	db  *sql.DB
+	ttl time.Duration
+}
 
-CREATE INDEX IF NOT EXISTS idx_documents_updated_at
-ON documents(updated_at DESC);
-`
+func NewNonceStore(db *sql.DB, ttl time.Duration) *NonceStore {
+	return &NonceStore{db: db, ttl: ttl}
+}
 
-const schemaNonces = `
-CREATE TABLE IF NOT EXISTS nonces (
-    nonce TEXT PRIMARY KEY,
-    expires_at TEXT NOT NULL
-);
+func (s *NonceStore) UseOnce(value string, now time.Time) error {
+	tx, err := s.db.BeginTx(context.Background(), nil)
+	if err != nil {
+		return err
+	}
+	defer func() {
+		_ = tx.Rollback()
+	}()
 
-CREATE INDEX IF NOT EXISTS idx_nonces_expires_at
-ON nonces(expires_at);
-`
-
-func initSchema(ctx context.Context, db *sql.DB) error {
-	statements := []string{
-		"PRAGMA journal_mode = WAL;",
-		"PRAGMA busy_timeout = 5000;",
-		"PRAGMA synchronous = NORMAL;",
-		schemaDocuments,
-		schemaNonces,
+	if err := cleanupExpiredNonces(tx, now.UTC()); err != nil {
+		return err
 	}
 
-	for _, stmt := range statements {
-		if _, err := db.ExecContext(ctx, stmt); err != nil {
-			return err
+	const query = `INSERT INTO nonces (nonce, expires_at) VALUES (?, ?)`
+	_, err = tx.ExecContext(context.Background(), query, value, now.UTC().Add(s.ttl).Format(time.RFC3339))
+	if err != nil {
+		if isUniqueConstraint(err) {
+			return nonce.ErrReplayed
 		}
+		return err
 	}
 
-	return nil
+	return tx.Commit()
+}
+
+func (s *NonceStore) CleanupExpired(now time.Time) {
+	_ = cleanupExpiredNonces(s.db, now.UTC())
+}
+
+func cleanupExpiredNonces(execer interface {
+	ExecContext(context.Context, string, ...any) (sql.Result, error)
+}, now time.Time) error {
+	const query = `DELETE FROM nonces WHERE expires_at <= ?`
+	_, err := execer.ExecContext(context.Background(), query, now.Format(time.RFC3339))
+	return err
 }

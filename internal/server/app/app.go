@@ -38,7 +38,6 @@ import (
 	"github.com/codelif/hostbin/internal/server/documentsvc"
 	"github.com/codelif/hostbin/internal/server/logging"
 	"github.com/codelif/hostbin/internal/server/middleware"
-	"github.com/codelif/hostbin/internal/server/nonce"
 	"github.com/codelif/hostbin/internal/server/publichttp"
 	"github.com/codelif/hostbin/internal/server/store/sqlite"
 )
@@ -80,7 +79,7 @@ func New(cfg serverconfig.Config, opts Options) (*App, error) {
 
 	adminHandler := adminhttp.NewHandler(documentService, cfg.BaseDomain, cfg.ReservedSet)
 
-	nonceStore := nonce.NewMemoryStore(cfg.NonceTTL)
+	nonceStore := sqlite.NewNonceStore(db, cfg.NonceTTL)
 	authVerifier := adminauth.NewVerifier(cfg.AdminHost, []byte(cfg.PresharedKey), appClock, cfg.AuthTimestampSkew, nonceStore)
 
 	publicEngine := publichttp.NewEngine(publicHandler)

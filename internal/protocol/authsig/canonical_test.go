@@ -23,57 +23,18 @@
 package authsig
 
 import (
-	"crypto/hmac"
-	"crypto/sha256"
-	"encoding/hex"
-	"net/http"
-	"strings"
-
-	"github.com/codelif/hostbin/internal/domain/hosts"
+	"net/http/httptest"
+	"testing"
 )
 
-func SHA256Hex(body []byte) string {
-	hash := sha256.Sum256(body)
-	return hex.EncodeToString(hash[:])
-}
+func TestCanonicalRequestIncludesHost(t *testing.T) {
+	reqOne := httptest.NewRequest("PUT", "https://admin.domain.com/api/v1/documents/doc1?view=full", nil)
+	reqTwo := httptest.NewRequest("PUT", "https://admin.otherdomain.com/api/v1/documents/doc1?view=full", nil)
 
-func CanonicalRequest(r *http.Request, bodyHash, timestamp, nonce string) string {
-	parts := []string{
-		strings.ToUpper(r.Method),
-		signatureHost(r),
-		rawPath(r),
-		r.URL.RawQuery,
-		bodyHash,
-		timestamp,
-		nonce,
+	one := CanonicalRequest(reqOne, SHA256Hex(nil), "1712145600", "nonce-1")
+	two := CanonicalRequest(reqTwo, SHA256Hex(nil), "1712145600", "nonce-1")
+
+	if one == two {
+		t.Fatal("CanonicalRequest() should differ when host differs")
 	}
-
-	return strings.Join(parts, "\n")
-}
-
-func Sign(secret []byte, canonical string) []byte {
-	mac := hmac.New(sha256.New, secret)
-	_, _ = mac.Write([]byte(canonical))
-	return mac.Sum(nil)
-}
-
-func rawPath(r *http.Request) string {
-	if r.URL.RawPath != "" {
-		return r.URL.RawPath
-	}
-	return r.URL.EscapedPath()
-}
-
-func signatureHost(r *http.Request) string {
-	rawHost := r.Host
-	if rawHost == "" {
-		rawHost = r.URL.Host
-	}
-
-	host, err := hosts.NormalizeHost(rawHost)
-	if err == nil {
-		return host
-	}
-
-	return strings.TrimSuffix(strings.ToLower(strings.TrimSpace(rawHost)), ".")
 }

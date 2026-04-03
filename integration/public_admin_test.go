@@ -196,14 +196,43 @@ func TestPublicAndAdminFlows(t *testing.T) {
 	}
 }
 
+func TestAdminReplaySurvivesAppRestart(t *testing.T) {
+	fixedTime := time.Date(2026, 4, 2, 12, 0, 0, 0, time.UTC)
+	dbPath := filepath.Join(t.TempDir(), "data.db")
+	handlerOne, cleanupOne := newTestHandlerWithDB(t, fixedTime, dbPath)
+
+	reqOne := signedAdminRequest(t, http.MethodPost, "/api/v1/documents/doc1", []byte("hello world"), fixedTime, "ffff0000bbbb2222cccc3333dddd4444")
+	respOne := httptest.NewRecorder()
+	handlerOne.ServeHTTP(respOne, reqOne)
+	if respOne.Code != http.StatusCreated {
+		t.Fatalf("first POST status = %d, want %d, body=%s", respOne.Code, http.StatusCreated, respOne.Body.String())
+	}
+	cleanupOne()
+
+	handlerTwo, cleanupTwo := newTestHandlerWithDB(t, fixedTime, dbPath)
+	defer cleanupTwo()
+
+	reqTwo := signedAdminRequest(t, http.MethodPost, "/api/v1/documents/doc2", []byte("hello again"), fixedTime, "ffff0000bbbb2222cccc3333dddd4444")
+	respTwo := httptest.NewRecorder()
+	handlerTwo.ServeHTTP(respTwo, reqTwo)
+	if respTwo.Code != http.StatusUnauthorized || strings.TrimSpace(respTwo.Body.String()) != `{"error":"replayed_nonce"}` {
+		t.Fatalf("replay after restart response = (%d, %q)", respTwo.Code, respTwo.Body.String())
+	}
+}
+
 func newTestHandler(t *testing.T, fixedTime time.Time) (http.Handler, func()) {
+	t.Helper()
+	return newTestHandlerWithDB(t, fixedTime, filepath.Join(t.TempDir(), "data.db"))
+}
+
+func newTestHandlerWithDB(t *testing.T, fixedTime time.Time, dbPath string) (http.Handler, func()) {
 	t.Helper()
 	cfg := config.Config{
 		ListenAddr:         "127.0.0.1:8080",
 		BaseDomain:         "domain.com",
 		AdminHost:          "admin.domain.com",
 		PresharedKey:       "01234567890123456789012345678901",
-		DBPath:             filepath.Join(t.TempDir(), "data.db"),
+		DBPath:             dbPath,
 		ReservedSubdomains: []string{"admin", "www", "api"},
 		ReservedSet: map[string]struct{}{
 			"admin": {},

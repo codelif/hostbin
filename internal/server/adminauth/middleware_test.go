@@ -79,6 +79,17 @@ func TestVerifierRejectsPathMismatch(t *testing.T) {
 	assertJSONError(t, resp, http.StatusUnauthorized, "invalid_signature")
 }
 
+func TestVerifierRejectsHostMismatch(t *testing.T) {
+	engine, fixedTime := testEngine(t)
+	req := signedRequest(t, http.MethodPut, "/api/v1/documents/doc1", []byte("hello"), fixedTime, "aaaa9999abcd1234abcd1234abcd1234")
+	req.Host = "admin.otherdomain.com"
+	resp := httptest.NewRecorder()
+
+	engine.ServeHTTP(resp, req)
+
+	assertJSONError(t, resp, http.StatusUnauthorized, "unauthorized")
+}
+
 func TestVerifierRejectsOldTimestamp(t *testing.T) {
 	engine, fixedTime := testEngine(t)
 	req := signedRequest(t, http.MethodPut, "/api/v1/documents/doc1", []byte("hello"), fixedTime.Add(-2*time.Minute), "dddd1234abcd1234abcd1234abcd1234")
