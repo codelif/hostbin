@@ -42,6 +42,14 @@ import (
 	"github.com/codelif/hostbin/internal/server/store/sqlite"
 )
 
+const (
+	adminRateLimitPerMinute = 60
+	serverReadTimeout       = 15 * time.Second
+	serverWriteTimeout      = 15 * time.Second
+	serverIdleTimeout       = 60 * time.Second
+	serverMaxHeaderBytes    = 1 << 20
+)
+
 type Options struct {
 	Clock  clock.Clock
 	Logger *zap.Logger
@@ -81,9 +89,10 @@ func New(cfg serverconfig.Config, opts Options) (*App, error) {
 
 	nonceStore := sqlite.NewNonceStore(db, cfg.NonceTTL)
 	authVerifier := adminauth.NewVerifier(cfg.AdminHost, []byte(cfg.PresharedKey), appClock, cfg.AuthTimestampSkew, nonceStore)
+	adminRateLimiter := middleware.NewRateLimiter(appClock, adminRateLimitPerMinute, time.Minute)
 
 	publicEngine := publichttp.NewEngine(publicHandler)
-	adminEngine := adminhttp.NewEngine(adminHandler, cfg.MaxDocSize, authVerifier.Middleware())
+	adminEngine := adminhttp.NewEngine(adminHandler, cfg.MaxDocSize, adminRateLimiter, authVerifier.Middleware())
 	dispatcher := dispatch.NewHandler(cfg.BaseDomain, cfg.AdminHost, cfg.ReservedSet, adminEngine, publicEngine)
 
 	handler := middleware.RequestID(
@@ -96,6 +105,10 @@ func New(cfg serverconfig.Config, opts Options) (*App, error) {
 		Addr:              cfg.ListenAddr,
 		Handler:           handler,
 		ReadHeaderTimeout: 5 * time.Second,
+		ReadTimeout:       serverReadTimeout,
+		WriteTimeout:      serverWriteTimeout,
+		IdleTimeout:       serverIdleTimeout,
+		MaxHeaderBytes:    serverMaxHeaderBytes,
 	}
 
 	return &App{

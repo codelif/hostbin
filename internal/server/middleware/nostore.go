@@ -20,20 +20,14 @@
 //
 // SPDX-License-Identifier: MIT
 
-package adminv1
+package middleware
 
-const (
-	ErrorUnauthorized     = "unauthorized"
-	ErrorInvalidSignature = "invalid_signature"
-	ErrorInvalidTimestamp = "invalid_timestamp"
-	ErrorReplayedNonce    = "replayed_nonce"
-	ErrorAlreadyExists    = "already_exists"
-	ErrorInvalidSlug      = "invalid_slug"
-	ErrorNotFound         = "not_found"
-	ErrorDocumentTooLarge = "document_too_large"
-	ErrorBadRequest       = "bad_request"
-	ErrorInvalidUTF8      = "invalid_utf8"
-	ErrorRateLimited      = "rate_limited"
-	ErrorMethodNotAllowed = "method_not_allowed"
-	ErrorInternal         = "internal_error"
-)
+import "github.com/gin-gonic/gin"
+
+func NoStore() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Header("Cache-Control", "no-store")
+		c.Header("Pragma", "no-cache")
+		c.Next()
+	}
+}

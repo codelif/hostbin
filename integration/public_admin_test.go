@@ -52,6 +52,9 @@ func TestPublicAndAdminFlows(t *testing.T) {
 	if createResp.Code != http.StatusCreated {
 		t.Fatalf("POST status = %d, want %d, body=%s", createResp.Code, http.StatusCreated, createResp.Body.String())
 	}
+	if cacheControl := createResp.Header().Get("Cache-Control"); cacheControl != "no-store" {
+		t.Fatalf("POST Cache-Control = %q, want %q", cacheControl, "no-store")
+	}
 
 	var putBody struct {
 		Slug      string `json:"slug"`
@@ -148,6 +151,9 @@ func TestPublicAndAdminFlows(t *testing.T) {
 	handler.ServeHTTP(authCheckResp, authCheckReq)
 	if authCheckResp.Code != http.StatusOK || strings.TrimSpace(authCheckResp.Body.String()) != `{"status":"ok"}` {
 		t.Fatalf("auth check response = (%d, %q)", authCheckResp.Code, authCheckResp.Body.String())
+	}
+	if cacheControl := authCheckResp.Header().Get("Cache-Control"); cacheControl != "no-store" {
+		t.Fatalf("auth check Cache-Control = %q, want %q", cacheControl, "no-store")
 	}
 
 	missingReplaceReq := signedAdminRequest(t, http.MethodPut, "/api/v1/documents/missing", []byte("nope"), fixedTime, "acac1111bbbb2222cccc3333dddd4444")

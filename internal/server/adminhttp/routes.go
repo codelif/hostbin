@@ -31,7 +31,7 @@ import (
 	"github.com/codelif/hostbin/internal/server/middleware"
 )
 
-func NewEngine(handler *Handler, maxDocSize int64, authMiddleware gin.HandlerFunc) *gin.Engine {
+func NewEngine(handler *Handler, maxDocSize int64, middlewares ...gin.HandlerFunc) *gin.Engine {
 	gin.SetMode(gin.ReleaseMode)
 	engine := gin.New()
 	engine.HandleMethodNotAllowed = true
@@ -40,11 +40,12 @@ func NewEngine(handler *Handler, maxDocSize int64, authMiddleware gin.HandlerFun
 	engine.RemoveExtraSlash = false
 	engine.UseRawPath = true
 	engine.UnescapePathValues = false
-
+	engine.Use(middleware.NoStore())
 	engine.GET(adminv1.HealthPath, handler.Health)
 
 	authenticated := engine.Group(adminv1.BasePath)
-	authenticated.Use(middleware.LimitBodyBytes(maxDocSize), authMiddleware)
+	authenticated.Use(middleware.LimitBodyBytes(maxDocSize))
+	authenticated.Use(middlewares...)
 	authenticated.GET(adminv1.AuthCheckRelativePath, handler.AuthCheck)
 	authenticated.GET(adminv1.DocumentsRelativePath, handler.ListDocuments)
 	authenticated.GET(adminv1.DocumentPathPattern, handler.GetDocument)
